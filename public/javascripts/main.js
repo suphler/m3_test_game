@@ -63,7 +63,7 @@ var mainState = {
 
                     x: curXp,
                     y: curYp,
-                    isSelected: false,
+                    isSelected: false
 
                 };
 
@@ -98,7 +98,7 @@ var mainState = {
 
     }
 
-}
+};
 
 
 

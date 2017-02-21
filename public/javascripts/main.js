@@ -25,14 +25,12 @@ var mainState = {
         this.cursor = game.input.keyboard.createCursorKeys();
 
 
-
     },
 
     update: function () {
         this.img1.angle += 1;
         // this.move();
         this.hover();
-
 
 
     },
@@ -46,14 +44,14 @@ var mainState = {
         }
     },
 
-    hover: function(){
-      for(var i =0 ; i<9;i++){
-          for(var j =0;j<9;j++){
-              if (field[i][j].img.isSelected){
-                 field[i][j].img.angle +=1;
-              }
-          }
-      }
+    hover: function () {
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+                if (field[i][j].img.isSelected) {
+                    field[i][j].img.angle += 1;
+                }
+            }
+        }
     },
 
 
@@ -83,17 +81,18 @@ var mainState = {
                 field[i][j].cordinateY = field[i][j].img.position.y;
                 field[i][j].img.inputEnabled = true;
                 field[i][j].img.input.useHandCursor = true; //if you want a hand cursory
-                field[i][j].img.events.onInputOver.add(setAnimate, this );
+                field[i][j].img.events.onInputOver.add(setAnimate, this);
                 function setAnimate(sprite, event) {
-                   console.log(event);
-                    sprite.isSelected=true;
+                    console.log(event);
+                    sprite.isSelected = true;
                     console.log(sprite);
-                    sprite.x=10;
+                    sprite.x = 10;
                 }
-                    curXp++;
+
+                curXp++;
 
 
-                    // console.log(field);
+                // console.log(field);
 
 
             }
@@ -114,48 +113,23 @@ var mainState = {
 }
 
 
-var menuState = {
 
-    preload: function () {
-
-        game.load.image('bg', 'images/assets/bg/bg1.jpg');
-
-
-    },
-
-    create: function () {
-        game.add.sprite(0, 0, 'bg');
-    },
-
-    update: function () {
-    }
-
-}
-
-var resultState = {
-
-    preload: function () {
-
-        game.load.image('bg', 'images/assets/bg/bg1.jpg');
-
-
-    },
-
-    create: function () {
-        game.add.sprite(0, 0, 'bg');
-    },
-
-    update: function () {
-    }
-
-
-}
 
 var game = new Phaser.Game(1500, 1000, Phaser.AUTO, "", 'gameDiv');
+game.global = {
+    score: 0
+};
 
 game.state.add('main', mainState);
 game.state.add('menu', menuState);
-game.state.add('result', resultState);
-game.state.start('main');
+// game.state.add('result', resultState);
+
+game.state.add('boot', bootState);
+game.state.add('load', loadState);
+game.state.add('menu', menuState);
+// game.state.add('play', playState);
+// Start the 'boot' state
+game.state.start('boot');
+// game.state.start('main');
 
 

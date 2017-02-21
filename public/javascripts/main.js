@@ -1,26 +1,16 @@
 /**
  * Created by suphler on 18.02.17.
  */
-var field = [];
-var spotList = [];
-
 
 var mainState = {
     preload: function () {
-        spotList[0] = game.load.image('img01', 'images/assets/sprites/01.png');
-        spotList[1] = game.load.image('img02', 'images/assets/sprites/02.png');
-        spotList[2] = game.load.image('img03', 'images/assets/sprites/03.png');
-        spotList[3] = game.load.image('img04', 'images/assets/sprites/04.png');
-        spotList[4] = game.load.image('img05', 'images/assets/sprites/05.png');
-        spotList[5] = game.load.image('img06', 'images/assets/sprites/06.png');
-        spotList[6] = game.load.image('bg', 'images/assets/bg/bg1.jpg');
+
 
     },
 
     create: function () {
         game.add.sprite(0, 0, 'bg');
-        this.img1 = game.add.sprite(30, 30, 'img01');
-        this.img1.anchor.setTo(0.5, 0.5);
+
         this.buildFild();
         this.cursor = game.input.keyboard.createCursorKeys();
 
@@ -28,7 +18,7 @@ var mainState = {
     },
 
     update: function () {
-        this.img1.angle += 1;
+
         // this.move();
         this.hover();
 
@@ -74,11 +64,9 @@ var mainState = {
                     x: curXp,
                     y: curYp,
                     isSelected: false,
-                    cordinateX: 0,
-                    cordinateY: 0
+
                 };
-                field[i][j].cordinateX = field[i][j].img.position.x;
-                field[i][j].cordinateY = field[i][j].img.position.y;
+
                 field[i][j].img.inputEnabled = true;
                 field[i][j].img.input.useHandCursor = true; //if you want a hand cursory
                 field[i][j].img.events.onInputOver.add(setAnimate, this);
@@ -115,7 +103,7 @@ var mainState = {
 
 
 
-var game = new Phaser.Game(1500, 1000, Phaser.AUTO, "", 'gameDiv');
+var game = new Phaser.Game(1200, 1000, Phaser.AUTO, "", 'gameDiv');
 game.global = {
     score: 0
 };

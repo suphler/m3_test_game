@@ -21,6 +21,7 @@ var mainState = {
 
         // this.move();
         this.hover();
+        this.animateSelected();
 
 
     },
@@ -34,11 +35,23 @@ var mainState = {
         }
     },
 
-    hover: function () {
+    //TODO add check  @can be selected
+    //TODO add check  is selected  now and turn  off  current select
+    animateSelected:function () {
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
                 if (field[i][j].img.isSelected) {
-                    field[i][j].img.angle += 1;
+                    field[i][j].img.angle += 10;
+                }
+            }
+        }
+    },
+
+    hover: function () {
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+                if (field[i][j].img.isHovered) {
+                    field[i][j].img.angle += 5;
                 }
             }
         }
@@ -63,18 +76,36 @@ var mainState = {
 
                     x: curXp,
                     y: curYp,
-                    isSelected: false
+                    isSelected: false,
+                    test:false,
+                    isHovered:false
 
                 };
 
+                field[i][j].img.anchor.setTo(0.5,0.5);
                 field[i][j].img.inputEnabled = true;
                 field[i][j].img.input.useHandCursor = true; //if you want a hand cursory
-                field[i][j].img.events.onInputOver.add(setAnimate, this);
-                function setAnimate(sprite, event) {
+                field[i][j].img.events.onInputDown.add(setSelected, this);
+                field[i][j].img.events.onInputOver.add(setHovered, this);
+                field[i][j].img.events.onInputOut.add(setUnHovered, this);
+                function setSelected(sprite, event) {
                     console.log(event);
                     sprite.isSelected = true;
                     console.log(sprite);
-                    sprite.x = 10;
+                    // sprite.x = 10;
+                }
+
+                function setHovered(sprite, event) {
+                    console.log(event);
+                    sprite.isHovered = true;
+                    console.log(sprite);
+                    // sprite.x = 10;
+                }
+                function setUnHovered(sprite, event) {
+                    console.log(event);
+                    sprite.isHovered = false;
+                    console.log(sprite);
+                    // sprite.x = 10;
                 }
 
                 curXp++;

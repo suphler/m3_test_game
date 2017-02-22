@@ -19,11 +19,22 @@ var mainState = {
 
     update: function () {
 
+
+        this.delMarcked();
         // this.move();
         this.hover();
         this.animateSelected();
 
 
+    },
+    delMarcked: function () {
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+                if (field[i][j].img.markToDel) {
+                    field[i][j].img.kill();
+                }
+            }
+        }
     },
 
 
@@ -36,7 +47,6 @@ var mainState = {
     },
 
     //TODO add check  @can be selected
-    //TODO add check  is selected  now and turn  off  current select
     animateSelected: function () {
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
@@ -120,7 +130,7 @@ var mainState = {
                 sprite.isSelected = false;
                 this.setCurrentSelected({});
                 console.log("unselecting");
-            }else if (!this.isSelectedCheck(sprite)) {
+            } else if (!this.isSelectedCheck(sprite)) {
                 console.log("trying  to  swap");
                 this.swapSelected(currentSelected, sprite);
             }
@@ -149,26 +159,28 @@ var mainState = {
 
     },
 
-    swapSelected: function (s1, s2) {
+    swapSelected: function (s1, s2) {//TODO add check that spot is neibor
         var tmp = {};
 
-        console.log(s1, s2);
+        // console.log(s1, s2);
 
         tmp.x = s1.x;
         tmp.y = s1.y;
-        tmp.curX = s1.curX;
-        tmp.curY = s1.curY;
+        tmp.curXp = s1.curXp;
+        tmp.curYp = s1.curYp;
         s1.x = s2.x;
         s1.y = s2.y;
-        s1.curX = s2.curX;
-        s1.curY = s2.curY;
+        s1.curXp = s2.curXp;
+        s1.curYp = s2.curYp;
         s2.x = tmp.x;
         s2.y = tmp.y;
-        s2.curX = tmp.curX;
-        s2.curY = tmp.curY;
+        s2.curXp = tmp.curXp;
+        s2.curYp = tmp.curYp;
         currentSelected.isSelected = false;
-        currentSelected={};
+        currentSelected = {};
         this.setUnHovered(s2);
+        console.log("Swaped!");
+        this.doGoalCheck();
     }
 
     ,
@@ -203,7 +215,112 @@ var mainState = {
         var min = 1;
         return Math.floor(Math.random() * (max - min)) + min;
 
+    },
+
+    doGoalCheck: function () {
+        var goalStock = [];
+        var tmpHorisontale = [];
+        var horisontale = [];
+        var tmpVerticale = [];
+        var verticale = [];
+        var stockToRemove = [];
+
+        //all spritess to  one stock  and  sort  them after that
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+                goalStock.push(field[i][j].img);
+
+            }
+        }
+        //from here  horizontal check
+        goalStock.sort(this.horisontalSort);
+        for (var k = 0; k < goalStock.length; k++) {
+            if (k>=2) {
+                if (goalStock[k].curXp == goalStock[k - 1].curXp && goalStock[k - 1].curXp == goalStock[k - 2].curXp
+                    && goalStock[k].curYp == goalStock[k - 1].curYp + 1 || goalStock[k].curYp == goalStock[k - 1].curYp - 1
+                    && goalStock[k - 1].curYp == goalStock[k - 2].curYp + 1 || goalStock[k - 1].curYp == goalStock[k - 2].curYp - 1) {
+                    tmpHorisontale.push(goalStock[k]);
+                    tmpHorisontale.push(goalStock[k - 1]);
+                    tmpHorisontale.push(goalStock[k - 2]);
+                }
+            }
+            //
+            // if (goalStock[k].key == goalStock[k + 1].key && goalStock[k + 1].key == goalStock[k + 2].key
+            //     && goalStock[k].curYp ==goalStock[k + 1].curYp+1||goalStock[k].curYp ==goalStock[k + 1].curYp-1) {
+            //     tmpHorisontale.push(goalStock[k]);
+            //     tmpHorisontale.push(goalStock[k + 1]);
+            //     tmpHorisontale.push(goalStock[k + 2]);
+            // }
+            console.log(tmpHorisontale);
+            if (tmpHorisontale.length >= 3) {
+                for (var w = 0; w < tmpHorisontale.length; w++) {
+                    horisontale.push(tmpHorisontale[w]);
+                }
+            }
+            tmpHorisontale = [];
+
+
+        }
+        console.log("horisontale: ");
+        console.log(horisontale);
+
+        //from here  Verticale check
+        goalStock.sort(this.verticalSort);
+        for (var k = 0; k < goalStock.length ; k++) {
+            if (k>=2) {
+                if (goalStock[k].curYp == goalStock[k - 1].curYp && goalStock[k - 1].curYp == goalStock[k - 2].curYp
+                    && goalStock[k].curXp == goalStock[k - 1].curXp + 1 || goalStock[k].curXp == goalStock[k - 1].curXp - 1
+                    && goalStock[k - 1].curXp == goalStock[k - 2].curXp + 1 || goalStock[k - 1].curXp == goalStock[k - 2].curXp - 1) {
+                    tmpVerticale.push(goalStock[k]);
+                    tmpVerticale.push(goalStock[k - 1]);
+                    tmpVerticale.push(goalStock[k - 2]);
+                }
+            }
+
+
+
+            // if (goalStock[k].key == goalStock[k + 1].key && goalStock[k + 1].key == goalStock[k + 2].key) {
+            //     tmpVerticale.push(goalStock[k]);
+            //     tmpVerticale.push(goalStock[k + 1]);
+            //     tmpVerticale.push(goalStock[k + 2]);
+            // }
+            console.log(tmpVerticale);
+            if (tmpVerticale.length >= 3) {
+                for (var w = 0; w < tmpVerticale.length; w++) {
+                    verticale.push(tmpVerticale[w]);
+                }
+            }
+            tmpVerticale = [];
+
+
+        }
+        console.log("verticale: ");
+        console.log(verticale);
+        stockToRemove = stockToRemove.concat(horisontale);
+        stockToRemove = stockToRemove.concat(verticale);
+        console.log(stockToRemove);
+        this.marckToDel(stockToRemove);
+    },
+
+    marckToDel: function (arrToDel) {
+        if (arrToDel.length > 0) {
+            for (var i = 0; i < arrToDel.length; i++) {
+                arrToDel[i].markToDel = true;
+            }
+        }
+    },
+
+
+    horisontalSort: function (a, b) {
+        if (a.curXp > b.curXp) return 1;
+        if (a.curXp < b.curXp) return -1;
+    },
+
+    verticalSort: function (a, b) {
+        if (a.curYp > b.curYp) return 1;
+        if (a.curYp < b.curYp) return -1;
     }
+
 
 };
 

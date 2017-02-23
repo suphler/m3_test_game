@@ -5,6 +5,7 @@ var field = [];
 var spotList = [];
 var currentSelected={};
 var secondSelected={};
+var  emptySet=[];
 
 
 var loadState = {

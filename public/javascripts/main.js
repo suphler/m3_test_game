@@ -31,10 +31,13 @@ var mainState = {
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
                 if (field[i][j].img.markToDel) {
-                    field[i][j].img.kill();
+                    emptySet.push(field[i][j]);
+                    field[i][j].img.angle -= 25;
+                    // field[i][j].img.kill();
                 }
             }
         }
+        // console.log(emptySet);
     },
 
 
@@ -51,7 +54,7 @@ var mainState = {
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
                 if (field[i][j].img.isSelected) {
-                    field[i][j].img.angle += 10;
+                    field[i][j].img.angle += 5;
                 }
             }
         }
@@ -61,7 +64,7 @@ var mainState = {
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
                 if (field[i][j].img.isHovered) {
-                    field[i][j].img.angle += 5;
+                    field[i][j].img.angle += 2;
                 }
             }
         }
@@ -112,6 +115,9 @@ var mainState = {
 
     },
     setSelected: function (sprite, event, a) {
+        console.log(sprite.curXp);
+        console.log(sprite.curYp);
+        console.log(sprite.key);
         if (!this.isSelectedOnField()) {
             if (this.isSelectedCheck(sprite)) {
                 sprite.isSelected = false;
@@ -230,20 +236,52 @@ var mainState = {
             for (var j = 0; j < 9; j++) {
                 goalStock.push(field[i][j].img);
 
+                if (j >= 2) {
+                    if (field[i][j].img.curYp == field[i][j-1].img.curYp && field[i][j-1].img.curYp == field[i][j-2].img.curYp) {
+                        if (field[i][j].img.key == field[i][j-1].img.key && field[i][j].img.key == field[i][j-2].img.key) {
+                            if (field[i][j].img.curXp == field[i][j-1].img.curXp + 1 || field[i][j].img.curXp == field[i][j-1].img.curXp - 1) {
+                                if (field[i][j-1].img.curXp == field[i][j-2].img.curXp + 1 || field[i][j-1].img.curXp == field[i][j-2].img.curXp - 1) {
+                                    {
+
+
+                                        tmpHorisontale.push(field[i][j].img);
+                                        tmpHorisontale.push(field[i][j-1].img);
+                                        tmpHorisontale.push(field[i][j-2].img);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+
             }
         }
         //from here  horizontal check
-        goalStock.sort(this.horisontalSort);
-        for (var k = 0; k < goalStock.length; k++) {
-            if (k>=2) {
-                if (goalStock[k].curXp == goalStock[k - 1].curXp && goalStock[k - 1].curXp == goalStock[k - 2].curXp
-                    && goalStock[k].curYp == goalStock[k - 1].curYp + 1 || goalStock[k].curYp == goalStock[k - 1].curYp - 1
-                    && goalStock[k - 1].curYp == goalStock[k - 2].curYp + 1 || goalStock[k - 1].curYp == goalStock[k - 2].curYp - 1) {
-                    tmpHorisontale.push(goalStock[k]);
-                    tmpHorisontale.push(goalStock[k - 1]);
-                    tmpHorisontale.push(goalStock[k - 2]);
-                }
-            }
+        // goalStock.sort(this.horisontalSort);
+
+
+        //=========================
+        // for (var k = 0; k < goalStock.length; k++) {
+        //     if (k >= 2) {
+        //         if (goalStock[k].curXp == goalStock[k - 1].curXp && goalStock[k - 1].curXp == goalStock[k - 2].curXp) {
+        //             if (goalStock[k].key == goalStock[k - 1].key && goalStock[k].key == goalStock[k - 2].key) {
+        //                 if (goalStock[k].curYp == goalStock[k - 1].curYp + 1 || goalStock[k].curYp == goalStock[k - 1].curYp - 1) {
+        //                     if (goalStock[k - 1].curYp == goalStock[k - 2].curYp + 1 || goalStock[k - 1].curYp == goalStock[k - 2].curYp - 1) {
+        //                         {
+        //
+        //
+        //                             tmpHorisontale.push(goalStock[k]);
+        //                             tmpHorisontale.push(goalStock[k - 1]);
+        //                             tmpHorisontale.push(goalStock[k - 2]);
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+
+            //===========================
             //
             // if (goalStock[k].key == goalStock[k + 1].key && goalStock[k + 1].key == goalStock[k + 2].key
             //     && goalStock[k].curYp ==goalStock[k + 1].curYp+1||goalStock[k].curYp ==goalStock[k + 1].curYp-1) {
@@ -251,53 +289,59 @@ var mainState = {
             //     tmpHorisontale.push(goalStock[k + 1]);
             //     tmpHorisontale.push(goalStock[k + 2]);
             // }
-            console.log(tmpHorisontale);
+            // console.log(tmpHorisontale);
             if (tmpHorisontale.length >= 3) {
                 for (var w = 0; w < tmpHorisontale.length; w++) {
                     horisontale.push(tmpHorisontale[w]);
+                    console.log(tmpHorisontale[w].curXp);
+                    console.log(tmpHorisontale[w].curYp);
+                    console.log(tmpHorisontale[w].key);
                 }
             }
             tmpHorisontale = [];
 
 
-        }
+       // }
         console.log("horisontale: ");
         console.log(horisontale);
 
         //from here  Verticale check
-        goalStock.sort(this.verticalSort);
-        for (var k = 0; k < goalStock.length ; k++) {
-            if (k>=2) {
-                if (goalStock[k].curYp == goalStock[k - 1].curYp && goalStock[k - 1].curYp == goalStock[k - 2].curYp
-                    && goalStock[k].curXp == goalStock[k - 1].curXp + 1 || goalStock[k].curXp == goalStock[k - 1].curXp - 1
-                    && goalStock[k - 1].curXp == goalStock[k - 2].curXp + 1 || goalStock[k - 1].curXp == goalStock[k - 2].curXp - 1) {
-                    tmpVerticale.push(goalStock[k]);
-                    tmpVerticale.push(goalStock[k - 1]);
-                    tmpVerticale.push(goalStock[k - 2]);
-                }
-            }
-
-
-
-            // if (goalStock[k].key == goalStock[k + 1].key && goalStock[k + 1].key == goalStock[k + 2].key) {
-            //     tmpVerticale.push(goalStock[k]);
-            //     tmpVerticale.push(goalStock[k + 1]);
-            //     tmpVerticale.push(goalStock[k + 2]);
-            // }
-            console.log(tmpVerticale);
-            if (tmpVerticale.length >= 3) {
-                for (var w = 0; w < tmpVerticale.length; w++) {
-                    verticale.push(tmpVerticale[w]);
-                }
-            }
-            tmpVerticale = [];
-
-
-        }
-        console.log("verticale: ");
-        console.log(verticale);
+        // goalStock.sort(this.verticalSort);
+        // for (var k = 0; k < goalStock.length; k++) {
+        //     if (k >= 2) {
+        //         if (goalStock[k].curYp == goalStock[k - 1].curYp && goalStock[k - 1].curYp == goalStock[k - 2].curYp
+        //             && goalStock[k].key == goalStock[k - 1].key && goalStock[k].key == goalStock[k - 2].key
+        //             && goalStock[k].curXp == goalStock[k - 1].curXp + 1 || goalStock[k].curXp == goalStock[k - 1].curXp - 1
+        //             && goalStock[k - 1].curXp == goalStock[k - 2].curXp + 1 || goalStock[k - 1].curXp == goalStock[k - 2].curXp - 1) {
+        //             tmpVerticale.push(goalStock[k]);
+        //             tmpVerticale.push(goalStock[k - 1]);
+        //             tmpVerticale.push(goalStock[k - 2]);
+        //         }
+        //     }
+        //
+        //
+        //     // if (goalStock[k].key == goalStock[k + 1].key && goalStock[k + 1].key == goalStock[k + 2].key) {
+        //     //     tmpVerticale.push(goalStock[k]);
+        //     //     tmpVerticale.push(goalStock[k + 1]);
+        //     //     tmpVerticale.push(goalStock[k + 2]);
+        //     // }
+        //     // console.log(tmpVerticale);
+        //     if (tmpVerticale.length >= 3) {
+        //         for (var w = 0; w < tmpVerticale.length; w++) {
+        //             verticale.push(tmpVerticale[w]);
+        //             console.log(tmpVerticale[w].curXp);
+        //             console.log(tmpVerticale[w].curYp);
+        //             console.log(tmpVerticale[w].key);
+        //         }
+        //     }
+        //     tmpVerticale = [];
+        //
+        //
+        // }
+        // console.log("verticale: ");
+        // console.log(verticale);
         stockToRemove = stockToRemove.concat(horisontale);
-        stockToRemove = stockToRemove.concat(verticale);
+        // stockToRemove = stockToRemove.concat(verticale);
         console.log(stockToRemove);
         this.marckToDel(stockToRemove);
     },
@@ -329,7 +373,6 @@ var game = new Phaser.Game(1200, 1000, Phaser.AUTO, "", 'gameDiv');
 game.global = {
     score: 0
 };
-
 game.state.add('main', mainState);
 game.state.add('menu', menuState);
 // game.state.add('result', resultState);

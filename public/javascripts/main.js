@@ -186,7 +186,8 @@ var mainState = {
         currentSelected = {};
         this.setUnHovered(s2);
         console.log("Swaped!");
-        this.doGoalCheck();
+        this.doGoalCheckGraph();
+        // this.doGoalCheck();
     }
 
     ,
@@ -237,16 +238,16 @@ var mainState = {
                 goalStock.push(field[i][j].img);
 
                 if (j >= 2) {
-                    if (field[i][j].img.curYp == field[i][j-1].img.curYp && field[i][j-1].img.curYp == field[i][j-2].img.curYp) {
-                        if (field[i][j].img.key == field[i][j-1].img.key && field[i][j].img.key == field[i][j-2].img.key) {
-                            if (field[i][j].img.curXp == field[i][j-1].img.curXp + 1 || field[i][j].img.curXp == field[i][j-1].img.curXp - 1) {
-                                if (field[i][j-1].img.curXp == field[i][j-2].img.curXp + 1 || field[i][j-1].img.curXp == field[i][j-2].img.curXp - 1) {
+                    if (field[i][j].img.curYp == field[i][j - 1].img.curYp && field[i][j - 1].img.curYp == field[i][j - 2].img.curYp) {
+                        if (field[i][j].img.key == field[i][j - 1].img.key && field[i][j].img.key == field[i][j - 2].img.key) {
+                            if (field[i][j].img.curXp == field[i][j - 1].img.curXp + 1 || field[i][j].img.curXp == field[i][j - 1].img.curXp - 1) {
+                                if (field[i][j - 1].img.curXp == field[i][j - 2].img.curXp + 1 || field[i][j - 1].img.curXp == field[i][j - 2].img.curXp - 1) {
                                     {
 
 
                                         tmpHorisontale.push(field[i][j].img);
-                                        tmpHorisontale.push(field[i][j-1].img);
-                                        tmpHorisontale.push(field[i][j-2].img);
+                                        tmpHorisontale.push(field[i][j - 1].img);
+                                        tmpHorisontale.push(field[i][j - 2].img);
                                     }
                                 }
                             }
@@ -281,27 +282,27 @@ var mainState = {
         //         }
         //     }
 
-            //===========================
-            //
-            // if (goalStock[k].key == goalStock[k + 1].key && goalStock[k + 1].key == goalStock[k + 2].key
-            //     && goalStock[k].curYp ==goalStock[k + 1].curYp+1||goalStock[k].curYp ==goalStock[k + 1].curYp-1) {
-            //     tmpHorisontale.push(goalStock[k]);
-            //     tmpHorisontale.push(goalStock[k + 1]);
-            //     tmpHorisontale.push(goalStock[k + 2]);
-            // }
-            // console.log(tmpHorisontale);
-            if (tmpHorisontale.length >= 3) {
-                for (var w = 0; w < tmpHorisontale.length; w++) {
-                    horisontale.push(tmpHorisontale[w]);
-                    console.log(tmpHorisontale[w].curXp);
-                    console.log(tmpHorisontale[w].curYp);
-                    console.log(tmpHorisontale[w].key);
-                }
+        //===========================
+        //
+        // if (goalStock[k].key == goalStock[k + 1].key && goalStock[k + 1].key == goalStock[k + 2].key
+        //     && goalStock[k].curYp ==goalStock[k + 1].curYp+1||goalStock[k].curYp ==goalStock[k + 1].curYp-1) {
+        //     tmpHorisontale.push(goalStock[k]);
+        //     tmpHorisontale.push(goalStock[k + 1]);
+        //     tmpHorisontale.push(goalStock[k + 2]);
+        // }
+        // console.log(tmpHorisontale);
+        if (tmpHorisontale.length >= 3) {
+            for (var w = 0; w < tmpHorisontale.length; w++) {
+                horisontale.push(tmpHorisontale[w]);
+                console.log(tmpHorisontale[w].curXp);
+                console.log(tmpHorisontale[w].curYp);
+                console.log(tmpHorisontale[w].key);
             }
-            tmpHorisontale = [];
+        }
+        tmpHorisontale = [];
 
 
-       // }
+        // }
         console.log("horisontale: ");
         console.log(horisontale);
 
@@ -344,6 +345,112 @@ var mainState = {
         // stockToRemove = stockToRemove.concat(verticale);
         console.log(stockToRemove);
         this.marckToDel(stockToRemove);
+    },
+
+    doGoalCheckGraph: function () {
+        var goalStock = [];
+        var marckToDel=[];
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+                goalStock.push(field[i][j].img);
+            }
+        }
+        //check all spots (main cicle)
+        for (var k=0;k<goalStock.length;k++){
+            var tmpGraphTree=[];
+            tmpGraphTree = buildGraphTree(goalStock[k]);
+                if (tmpGraphTree.length>=3){
+                    for (var l=0;l<tmpGraphTree.length;l++){
+                        marckToDel.push(tmpGraphTree[l]);
+                    }
+                }
+
+        }
+
+        function buildGraphTree(spot) {
+            console.log("Build Graph for spot: "+ spot.curXp+','+spot.curYp);
+            // var graphTree=[];
+            var  tmpNeighbors=[];
+            var checkedNeighbors=[];
+            checkedNeighbors.push(spot);
+            tmpNeighbors = foundNeighbors(spot);
+            console.log("tmpNeighbors before check neighbors of existed neighbors: ");
+            console.log(tmpNeighbors);
+                for(var n=0;n<tmpNeighbors.length;n++){
+                    if (spot.key == tmpNeighbors[n].key && !isInCheckedNeighbors(tmpNeighbors[n])){
+                        checkedNeighbors.push(tmpNeighbors[n]);
+                        var newFoundedNeighbors = foundNeighbors(tmpNeighbors[n]);
+                        if (newFoundedNeighbors.length>0){
+                            tmpNeighbors = tmpNeighbors.concat(newFoundedNeighbors);
+                            console.log("tmpNeighbors after add new neighbors: ");
+                            console.log(tmpNeighbors);
+                        }
+                    }
+                    // console.log(tmpNeighbors);
+
+                }
+            // console.log(checkedNeighbors);
+
+
+
+
+            function isInCheckedNeighbors(spotToCheck){
+                    if (checkedNeighbors.indexOf(spotToCheck) == -1) {
+                        // element doesn't exist in array
+                          console.log("his never seen  before!")
+
+                        return false;
+                    }
+                    console.log("FOund myself in checked neighbors!")
+                    return true;
+                }
+
+
+            return checkedNeighbors;
+        }
+
+
+        function foundNeighbors(spot) {
+           var neighbors=[];
+           var top, right, left, down;
+           for(var i =0;i<goalStock.length;i++){
+               if (goalStock[i].curYp-1==spot.curYp && goalStock[i].curXp == spot.curXp){
+                   down=goalStock[i];
+               }
+               if (goalStock[i].curYp+1==spot.curYp && goalStock[i].curXp == spot.curXp){
+                   top=goalStock[i];
+               }
+               if (goalStock[i].curYp==spot.curYp && goalStock[i].curXp+1 == spot.curXp){
+                   left=goalStock[i];
+               }
+               if (goalStock[i].curYp==spot.curYp && goalStock[i].curXp-1 == spot.curXp){
+                   right=goalStock[i];
+               }
+
+           }
+           if(down){
+               neighbors.push(down);
+
+           }
+           if (top){
+               neighbors.push(top);
+           }
+           if (left){
+               neighbors.push(left);
+
+           }
+           if (right){
+               neighbors.push(right);
+           }
+
+           //  console.log("I found this  neighbors for spot: "+ spot.curXp+','+spot.curYp);
+           // console.log(neighbors);
+           return neighbors;
+        }
+
+        this.marckToDel(marckToDel);
+
+
     },
 
     marckToDel: function (arrToDel) {

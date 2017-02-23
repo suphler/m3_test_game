@@ -11,6 +11,8 @@ var bootState = {
         game.stage.backgroundColor = '#3498db';
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.renderer.renderSession.roundPixels = true;
+        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+
 
 
 // Start the load state

@@ -33,6 +33,8 @@ var loadState = {
     },
     create: function () {
 // Go to the menu state
+        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+
         game.state.start('menu');
     }
 };

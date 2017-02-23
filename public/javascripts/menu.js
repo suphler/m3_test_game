@@ -8,6 +8,7 @@ var menuState = {
 
         var nameLabel = game.add.text(game.width/3, 80,'Press Up to  start', { font: '50px Arial', fill: '#ffffff' });
 
+        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 
         var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
         upKey.onDown.add(this.start, this);

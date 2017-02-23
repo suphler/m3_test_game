@@ -10,6 +10,7 @@ var mainState = {
 
     create: function () {
         game.add.sprite(0, 0, 'bg');
+        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 
         this.buildFild();
         this.cursor = game.input.keyboard.createCursorKeys();
@@ -95,6 +96,9 @@ var mainState = {
                 field[i][j].img.input.useHandCursor = true; //if you want a hand cursory
                 field[i][j].img.curXp = curXp;
                 field[i][j].img.curYp = curYp;
+                // field[i][j].img.scale.setTo(1);
+
+
 
 
                 // field[i][j].img.events.onInputDown.add(function(fn,param,param2, param3){
@@ -476,7 +480,7 @@ var mainState = {
 };
 
 
-var game = new Phaser.Game(1200, 1000, Phaser.AUTO, "", 'gameDiv');
+var game = new Phaser.Game(1200, 1200, Phaser.AUTO, "", 'gameDiv');
 game.global = {
     score: 0
 };
@@ -490,5 +494,6 @@ game.state.add('load', loadState);
 
 game.state.start('boot');
 // game.state.start('main');
+
 
 
